@@ -1,39 +1,58 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
 
 interface ProductCardProps {
   id: number;
   name: string;
   amount: number;
   onDelete: () => void;
-  isChecked: false;
 }
 
-//function deleteProduct(id: number): void {
-//const updatedProducts = products.filter((p) => p.id !== id);
-// setProducts(updatedProducts);
-//}
+export function ProductCard({ name, amount, onDelete }: ProductCardProps) {
+  const [isChecked, setIsChecked] = useState(false);
 
-export function ProductCard({
-  name,
-  amount,
-  isChecked,
-  onDelete,
-}: ProductCardProps) {
-  function handleCheckEvent() {
-    if (isChecked) {
-      return (
-        <Card className="w-full p-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="font-semibold">{name}</h3>
-              <p className="text-xs text-gray-500">{amount}</p>
-            </div>
-            <div className="flex justify-end">
+  return (
+    <Card className="w-full p-4">
+      <div className="flex items-center justify-between">
+        <div>
+          <h3
+            className={`font-semibold ${isChecked ? "text-gray-400 line-through" : "text-black"}`}
+          >
+            {name}
+          </h3>
+          <p className="text-xs text-gray-500">{amount}x</p>
+        </div>
+
+        <div className="flex gap-2">
+          {!isChecked ? (
+            <Button
+              variant="outline"
+              onClick={() => setIsChecked(true)}
+              className="flex items-center gap-2"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth="1.5"
+                stroke="currentColor"
+                className="size-5"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                />
+              </svg>
+              Abhaken
+            </Button>
+          ) : (
+            // Löschen- und Zurück-Button werden nur angezeigt, wenn isChecked===true ist
+            <>
               <Button
-                variant="outline"
-                className="flex items-center gap-2"
                 onClick={onDelete}
+                className="flex items-center gap-2 bg-red-500 hover:bg-red-600"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -46,65 +65,36 @@ export function ProductCard({
                   <path
                     stroke-linecap="round"
                     stroke-linejoin="round"
-                    d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                    d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
                   />
                 </svg>
               </Button>
-              <Button>
+
+              <Button
+                variant="outline"
+                onClick={() => setIsChecked(false)}
+                className="flex items-center gap-2"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
-                  stroke-width="1.5"
+                  strokeWidth="1.5"
                   stroke="currentColor"
                   className="size-5"
                 >
                   <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                     d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3"
                   />
                 </svg>
                 Zurück
               </Button>
-            </div>
-          </div>
-        </Card>
-      );
-    } else {
-      return (
-        <Card className="w-full p-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="font-semibold">{name}</h3>
-              <p className="text-xs text-gray-500">{amount}</p>
-            </div>
-            <div className="flex justify-end">
-              <Button
-                variant="outline"
-                className="flex items-center gap-2"
-                isChecked={handleCheckEvent}
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke-width="1.5"
-                  stroke="currentColor"
-                  className="size-5"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-                  />
-                </svg>
-                Abhaken
-              </Button>
-            </div>
-          </div>
-        </Card>
-      );
-    }
-  }
+            </>
+          )}
+        </div>
+      </div>
+    </Card>
+  );
 }
