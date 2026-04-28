@@ -1,23 +1,122 @@
-import { Button } from "@/components/ui/button"
-import { Card } from "./components/ui/card"
+import { Button } from "@/components/ui/button";
+import { Input } from "./components/ui/input";
+import { useEffect, useState } from "react";
+import { ProductList } from "./components/ProductList";
+import { Toaster } from "@/components/ui/sonner";
+import { toast } from "sonner";
 
-export function App() {
-  return (
-    <div className="flex min-h-svh p-6">
-      <div className="flex max-w-md min-w-0 flex-col gap-4 text-sm leading-loose">
-        <div>
-          <h1 className="font-medium">Project ready!</h1>
-          <p>You may now add components and start building.</p>
-          <p>We&apos;ve already added the button component for you.</p>
-          <Button className="mt-2">Button</Button>
-          <Card>Hi</Card>
-        </div>
-        <div className="font-mono text-xs text-muted-foreground">
-          (Press <kbd>d</kbd> to toggle dark mode)
-        </div>
-      </div>
-    </div>
-  )
+interface Product {
+  id: number;
+  name: string;
+  amount: number;
 }
 
-export default App
+export function App() {
+  const [inputValue, setInputValue] = useState("");
+  const [amountValue, setAmountValue] = useState(1);
+  const [products, setProducts] = useState<Product[]>(() => {
+    const localData = localStorage.getItem("products");
+    return localData ? JSON.parse(localData) : [];
+  });
+  useEffect(() => {
+    localStorage.setItem("products", JSON.stringify(products));
+  }, [products]);
+
+  function handleProductInputChange(
+    event: React.ChangeEvent<HTMLInputElement>
+  ): void {
+    setInputValue(event.target.value);
+  }
+
+  function handleAmountInputChange(
+    event: React.ChangeEvent<HTMLInputElement>
+  ): void {
+    setAmountValue(Number(event.target.value));
+  }
+
+  function addProduct(): void {
+    if (inputValue.trim() === "") return;
+
+    const isDuplicate = products.some(
+      (product) =>
+        product.name.toLowerCase() === inputValue.trim().toLowerCase()
+    );
+
+    if (isDuplicate) {
+      toast.error("Das Produkt ist schon in der Liste!", {
+        position: "top-center",
+        duration: 2000,
+        style: {
+          backgroundColor: "#be123c",
+          color: "#ffffff",
+          border: "none",
+          fontSize: "1.2rem",
+        },
+      });
+      return;
+    }
+
+    setProducts([
+      ...products,
+      { id: Date.now(), name: inputValue.trim(), amount: amountValue },
+    ]);
+    setInputValue("");
+    setAmountValue(1);
+  }
+  function handleCheckEvent() {
+    return (
+      <span>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="rose-700"
+          className="size-5"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
+          />
+        </svg>
+      </span>
+    );
+  }
+
+  return (
+    <div className="mx-auto flex w-96 flex-col items-center justify-center gap-4">
+      <h1 className="mt-16 mb-10 w-full text-center text-3xl font-semibold">
+        Einkaufsliste
+      </h1>
+      <div className="flex w-full items-center justify-center gap-2">
+        <Input
+          type="text"
+          className="border outline-none placeholder:text-gray-500 focus:border-black focus:ring-0"
+          placeholder="Produkt eingeben..."
+          value={inputValue}
+          onChange={handleProductInputChange}
+        />
+        <Input
+          type="number"
+          min="1"
+          max="100"
+          value={amountValue}
+          onChange={handleAmountInputChange}
+          className="w-14"
+        />
+      </div>
+      <Button
+        className="w-full bg-gray-500 hover:bg-gray-600"
+        onClick={addProduct}
+        disabled={inputValue.length < 1}
+      >
+        Eintrag hinzufügen
+      </Button>
+      <ProductList products={products} onClickProduct={handleCheckEvent} />
+      <Toaster></Toaster>
+    </div>
+  );
+}
+
+export default App;
