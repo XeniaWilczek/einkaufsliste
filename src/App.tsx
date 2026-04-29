@@ -4,12 +4,7 @@ import { useEffect, useState } from "react";
 import { ProductList } from "./components/ProductList";
 import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
-
-interface Product {
-  id: number;
-  name: string;
-  amount: number;
-}
+import type { Product } from "./types/types";
 
 export function App() {
   const [inputValue, setInputValue] = useState("");
@@ -32,6 +27,23 @@ export function App() {
     event: React.ChangeEvent<HTMLInputElement>
   ): void {
     setAmountValue(Number(event.target.value));
+  }
+
+  function checkProduct(id: number) {
+    const productToMove = products.find((p) => p.id === id);
+    if (!productToMove) return;
+    const updatedProduct = {
+      ...productToMove,
+      checked: !productToMove.checked,
+    };
+
+    const otherProducts = products.filter((p) => p.id !== id);
+
+    if (updatedProduct.checked) {
+      setProducts([...otherProducts, updatedProduct]);
+    } else {
+      setProducts([updatedProduct, ...otherProducts]);
+    }
   }
 
   function addProduct(): void {
@@ -58,7 +70,12 @@ export function App() {
 
     setProducts([
       ...products,
-      { id: Date.now(), name: inputValue.trim(), amount: amountValue },
+      {
+        id: Date.now(),
+        name: inputValue.trim(),
+        amount: amountValue,
+        checked: false,
+      },
     ]);
     setInputValue("");
     setAmountValue(1);
@@ -109,7 +126,11 @@ export function App() {
       >
         Eintrag hinzufügen
       </Button>
-      <ProductList products={products} onClickProduct={deleteProduct} />
+      <ProductList
+        products={products}
+        onClickProduct={deleteProduct}
+        onCheck={checkProduct}
+      />
       <Toaster></Toaster>
     </div>
   );

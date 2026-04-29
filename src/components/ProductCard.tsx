@@ -1,23 +1,22 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import type { ProductCardProps } from "@/types/types";
 
-interface ProductCardProps {
-  id: number;
-  name: string;
-  amount: number;
-  onDelete: () => void;
-}
-
-export function ProductCard({ name, amount, onDelete }: ProductCardProps) {
-  const [isChecked, setIsChecked] = useState(false);
-
+export function ProductCard({
+  name,
+  amount,
+  onDelete,
+  onCheck,
+  checked,
+}: ProductCardProps) {
   return (
     <Card className="w-full p-4">
       <div className="flex items-center justify-between">
         <div>
           <h3
-            className={`font-semibold ${isChecked ? "text-gray-400 line-through" : "text-black"}`}
+            className={`font-semibold ${
+              checked ? "text-gray-400 line-through" : "text-black"
+            }`}
           >
             {name}
           </h3>
@@ -25,10 +24,10 @@ export function ProductCard({ name, amount, onDelete }: ProductCardProps) {
         </div>
 
         <div className="flex gap-2">
-          {!isChecked ? (
+          {!checked ? (
             <Button
               variant="outline"
-              onClick={() => setIsChecked(true)}
+              onClick={onCheck}
               className="flex items-center gap-2"
             >
               <svg
@@ -48,7 +47,7 @@ export function ProductCard({ name, amount, onDelete }: ProductCardProps) {
               Abhaken
             </Button>
           ) : (
-            // Löschen- und Zurück-Button werden nur angezeigt, wenn isChecked===true ist
+            // Löschen- und Zurück-Button werden nur angezeigt, wenn checked===true ist
             <>
               <Button
                 onClick={onDelete}
@@ -72,7 +71,7 @@ export function ProductCard({ name, amount, onDelete }: ProductCardProps) {
 
               <Button
                 variant="outline"
-                onClick={() => setIsChecked(false)}
+                onClick={onCheck}
                 className="flex items-center gap-2"
               >
                 <svg
