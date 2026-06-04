@@ -9,13 +9,12 @@ export interface Product {
 // Props für die Liste
 export interface ProductListProps {
   products: Product[];
-  onClickProduct: (id: number) => void;
+  onDelete: (id: number) => void;
   onCheck: (id: number) => void;
 }
 
 // Props für die einzelne Karte
 export interface ProductCardProps {
-  id: number;
   name: string;
   amount: number;
   checked: boolean;

@@ -3,7 +3,7 @@ import { ProductCard } from "./ProductCard";
 
 export function ProductList({
   products,
-  onClickProduct,
+  onDelete,
   onCheck,
 }: ProductListProps) {
   return (
@@ -15,14 +15,12 @@ export function ProductList({
       ) : (
         products.map((product) => (
           <ProductCard
-            key={product.id}
-            id={product.id}
+            key={product.id} 
             name={product.name}
             amount={product.amount}
-            onDelete={() => onClickProduct(product.id)}
+            onDelete={() => onDelete(product.id)}
             onCheck={() => onCheck(product.id)}
-            checked={product.checked}
-          />
+            checked={product.checked}           />
         ))
       )}
     </div>

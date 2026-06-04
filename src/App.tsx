@@ -1,12 +1,12 @@
 import { Button } from "@/components/ui/button";
-import { Input } from "./components/ui/input";
-import { useEffect, useState } from "react";
+import { Input } from "@/components/ui/input";
+import { useEffect, useState} from "react";
 import { ProductList } from "./components/ProductList";
 import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
 import type { Product } from "./types/types";
 
-export function App() {
+ export default function App() {
   const [inputValue, setInputValue] = useState("");
   const [amountValue, setAmountValue] = useState(1);
   const [products, setProducts] = useState<Product[]>(() => {
@@ -122,13 +122,13 @@ export function App() {
       <Button
         className="w-full bg-gray-500 hover:bg-gray-600"
         onClick={addProduct}
-        disabled={inputValue.length < 1}
+        disabled={inputValue.trim().length < 1}
       >
         Eintrag hinzufügen
       </Button>
       <ProductList
         products={products}
-        onClickProduct={deleteProduct}
+        onDelete={deleteProduct}
         onCheck={checkProduct}
       />
       <Toaster></Toaster>
@@ -136,4 +136,4 @@ export function App() {
   );
 }
 
-export default App;
+
