@@ -1,12 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import { ProductList } from "./components/ProductList";
 import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
 import type { Product } from "./types/types";
 
- export default function App() {
+export default function App() {
   const [inputValue, setInputValue] = useState("");
   const [amountValue, setAmountValue] = useState(1);
   const [products, setProducts] = useState<Product[]>(() => {
@@ -135,5 +135,3 @@ import type { Product } from "./types/types";
     </div>
   );
 }
-
-
